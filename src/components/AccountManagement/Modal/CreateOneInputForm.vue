@@ -35,9 +35,14 @@
   </el-form>
 </template>
 <script>
-import { reactive, ref } from "vue";
+import { reactive, ref, watchEffect } from "vue";
 import { Text, Message } from "../../../constants/commonConstants";
-import { InputCommon, ButtonCommon, NotifyModal } from "../../common";
+import {
+  InputCommon,
+  ButtonCommon,
+  NotifyModal,
+  beforeLoadCommon,
+} from "../../common";
 import { verifyEmail } from "../../../util/validate";
 import CreateRoleModal from "./CreateRoleModal.vue";
 import CreateAccountModal from "./CreateAccountModal.vue";
@@ -113,11 +118,11 @@ export default {
       showCreateAccModal.value = false;
       ruleForm.name = "";
     };
-    // onMounted(() => {
-    //   window.onbeforeunload = window.confirm(
-    //     "Do you really want to leave? you have unsaved changes!"
-    //   );
-    // });
+    watchEffect(() => {
+      if (ruleForm.name !== "") {
+        beforeLoadCommon();
+      }
+    });
     return {
       Text,
       showCreateRoleModal,

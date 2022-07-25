@@ -116,7 +116,7 @@ export default {
     };
 
     watchEffect(async () => {
-      if (AuthReducer.isFetching === true) {
+      if (AuthReducer.isFetching) {
         LoadingModal();
       }
       if (AuthReducer.message !== null) {

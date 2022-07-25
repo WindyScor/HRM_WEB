@@ -1,4 +1,5 @@
 <template>
+  <TimeLockModal v-if="visible" :visible="visible" :cancelModal="closeModal" />
   <div class="container">
     <div class="otp_form">
       <el-form
@@ -59,6 +60,7 @@
 import { ref, reactive, watchEffect, onBeforeUnmount } from "vue";
 import { Text, Message } from "../../constants/commonConstants";
 import { verifyOtp } from "../../util/validate";
+import TimeLockModal from "./Modal/TimeLockModal.vue";
 import router from "../../router";
 import VOtpInput from "vue3-otp-input";
 import { ButtonCommon, MessageBox, LoadingModal, NotifyModal } from "../common";
@@ -70,12 +72,14 @@ export default {
   components: {
     VOtpInput,
     ButtonCommon,
+    TimeLockModal,
   },
   setup() {
     const { OTP } = AuthSaga;
     const AuthReducer = useStore();
     const countdown = ref(10);
     const resendBtnDisable = ref(true);
+    const visible = ref(false);
     var clockCall = null;
     const formSize = ref("default");
     const ruleFormRef = ref();
@@ -130,7 +134,7 @@ export default {
       countdown.value = 30;
     };
     watchEffect(() => {
-      if (AuthReducer.isFetching === true) {
+      if (AuthReducer.isFetching) {
         LoadingModal();
       }
       if (AuthReducer.message !== null) {
@@ -138,10 +142,13 @@ export default {
           MessageBox({ message: AuthReducer.message, path: "/home" });
         }, 1000);
       }
-      if (AuthReducer.messageError !== null) {
+      if (AuthReducer.error && AuthReducer.timeLock == null) {
         setTimeout(() => {
           NotifyModal({ message: AuthReducer.messageError, type: "error" });
         }, 1000);
+      }
+      if (AuthReducer.error && AuthReducer.timeLock !== null) {
+        visible.value = true;
       }
       clockCall = setInterval(() => {
         decrementClock();
@@ -166,7 +173,13 @@ export default {
       countdown,
       reSendOtp,
       resendBtnDisable,
+      visible,
     };
+  },
+  methods: {
+    closeModal() {
+      this.visible = false;
+    },
   },
 };
 </script>

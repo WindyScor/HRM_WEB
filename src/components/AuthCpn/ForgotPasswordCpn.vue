@@ -1,4 +1,5 @@
 <template>
+  <TimeLockModal v-if="visible" :visible="visible" :cancelModal="closeModal" />
   <div class="container">
     <div class="forgotPassword_form">
       <el-form
@@ -42,6 +43,7 @@
 import { ref, reactive, watchEffect, onBeforeUnmount } from "vue";
 import { verifyEmail } from "../../util/validate";
 import { Text, Message } from "../../constants/commonConstants";
+import TimeLockModal from "./Modal/TimeLockModal.vue";
 import {
   ButtonCommon,
   MessageBox,
@@ -50,19 +52,19 @@ import {
   NotifyModal,
 } from "../common";
 import router from "../../router";
-
 import { useStore } from "../../reducers/AuthReducer";
 import { AuthSaga } from "../../sagas";
-
 export default {
   name: "ForgotPassword",
   components: {
     ButtonCommon,
     InputCommon,
+    TimeLockModal,
   },
   setup() {
     const AuthReducer = useStore();
     const { forgotPassword } = AuthSaga;
+    const visible = ref(false);
     const formSize = ref("default");
     const ruleFormRef = ref();
     const ruleForm = reactive({
@@ -98,7 +100,7 @@ export default {
       });
     };
     watchEffect(async () => {
-      if (AuthReducer.isFetching === true) {
+      if (AuthReducer.isFetching) {
         LoadingModal();
       }
       if (AuthReducer.message !== null) {
@@ -106,10 +108,13 @@ export default {
           MessageBox({ message: AuthReducer.message, path: "/otp" });
         }, 1000);
       }
-      if (AuthReducer.messageError !== null) {
+      if (AuthReducer.error && AuthReducer.timeLock == null) {
         setTimeout(() => {
           NotifyModal({ message: AuthReducer.messageError, type: "error" });
         }, 1000);
+      }  
+      if(AuthReducer.error && AuthReducer.timeLock !== null) {
+        visible.value = true;
       }
     });
     onBeforeUnmount(() => {
@@ -124,7 +129,13 @@ export default {
       validateEmail,
       Text,
       router,
+      visible,
     };
+  },
+  methods: {
+    closeModal() {
+      this.visible = false;
+    },
   },
 };
 </script>

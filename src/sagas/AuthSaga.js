@@ -5,10 +5,14 @@ async function login(payload) {
     const actions = useStore()
     await actions.loginRequest()
     try {
-        let res = await authApi.login({
-            email: payload.email,
-            password: payload.password
-        }, "", "")
+        // let res = await authApi.login({
+        //     email: payload.email,
+        //     password: payload.password
+        // }, "", "")
+        const res = {
+            status: false,
+            timeLock: 15
+        }
         if (res.status) {
             await localStorage.setItem('user', payload.email)
             await actions.loginSuccess({
@@ -16,7 +20,11 @@ async function login(payload) {
             })
             localStorage.setItem("user", payload.email)
         } else {
-            throw { message: res.message }
+            if (res.timeLock) {
+                throw { timeLock: res.timeLock }
+            } else {
+                throw { message: res.message }
+            }
         }
     } catch (error) {
         await actions.loginFailure(error)
@@ -35,7 +43,11 @@ async function forgotPassword(payload) {
                 otpTimeout: res.time_otp
             })
         } else {
-            throw { message: res.message }
+            if (res.timeLock) {
+                throw { timeLock: res.timeLock }
+            } else {
+                throw { message: res.message }
+            }
         }
     } catch (error) {
         await actions.forgotPasswordFailure(error)
@@ -75,7 +87,7 @@ async function OTP(payload) {
                 email: emailUser,
                 otp: payload.Otp
             }, "", "")
-            console.log(res,"login")
+            console.log(res, "login")
             if (res.status) {
                 localStorage.setItem('token', res.data.token)
                 await actions.otpSuccess({
@@ -83,13 +95,32 @@ async function OTP(payload) {
                     token: res.data.token
                 })
             } else {
-                throw { message: res.message }
+                if (res.timeLock) {
+                    throw { timeLock: res.timeLock }
+                } else {
+                    throw { message: res.message }
+                }
             }
         }
     } catch (error) {
         await actions.otpFailure(error)
     }
 }
+async function validateToken(payload) {
+    const actions = useStore()
+    await actions.tokenRequest()
+    try {
+        let res = await authApi.validateToken(null, null, null, payload.token)
+        if (res.status) {
+            await actions.tokenSuccess({})
+        } else {
+            localStorage.removeItem("token")
+            throw { message: res.message }
+        }
+    } catch (error) {
+        await actions.tokenFailure(error)
+    }
+}
 export {
-    login, forgotPassword, OTP, changePassword
+    login, forgotPassword, OTP, changePassword, validateToken
 }
