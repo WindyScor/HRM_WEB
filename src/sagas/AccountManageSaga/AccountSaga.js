@@ -2,7 +2,7 @@ import AccountStore from '../../reducers/AccManageReducer/AccountReducer'
 import { accountApi } from '../../api'
 // import { Account } from '../mockup'
 const token = localStorage.getItem('token')
-const limit = 10;
+const limit = 5;
 const password = "Eledevo@123"
 
 async function getAccount(payload) {
@@ -20,7 +20,8 @@ async function getAccount(payload) {
         await actions.getAccountSuccess({
             data: res.data,
             totalPages: totalPages,
-            activePage: payload.activePage
+            activePage: payload.activePage,
+            textSearch: payload.textSearch
         })
     } catch (error) {
         await actions.getAccountFailure(error)
@@ -38,7 +39,7 @@ async function createAccount(payload) {
             { email: payload.email, listIdRole: payload.roles, password: password }, null, null, token
         )
         if (res.status) {
-            if (payload.name.toLowerCase().includes(textSearch.toLowerCase())) {
+            if (payload.email.toLowerCase().includes(textSearch.toLowerCase())) {
                 if (data.length == limit) {
                     await actions.createAccountSuccess()
                     await getAccount({ activePage: totalPages + 1, textSearch: textSearch })
@@ -66,7 +67,7 @@ async function updateAccount(payload) {
             { active: payload.isActive, listIdRole: payload.role }, { id: `${payload.id}` }, null, token
         )
         if (res.status) {
-            if (payload.name.toLowerCase().includes(textSearch.toLowerCase())) {
+            if (payload.email.toLowerCase().includes(textSearch.toLowerCase())) {
                 await actions.updateAccountSuccess()
                 await getAccount({ activePage: activePage, textSearch: textSearch })
             } else {

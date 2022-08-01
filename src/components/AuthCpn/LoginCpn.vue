@@ -134,7 +134,7 @@ export default {
     };
     watchEffect(async () => {
       if (AuthReducer.isFetching) {
-        LoadingModal();
+        LoadingModal({ close: AuthReducer.isFetching });
       }
       if (AuthReducer.message !== null) {
         setTimeout(() => {
@@ -145,8 +145,8 @@ export default {
         setTimeout(() => {
           NotifyModal({ message: AuthReducer.messageError, type: "error" });
         }, 1000);
-      } 
-      if(AuthReducer.error && AuthReducer.timeLock !== null) {
+      }
+      if (AuthReducer.error && AuthReducer.timeLock !== null) {
         visible.value = true;
       }
     });

@@ -37,6 +37,7 @@ import { AccountTypes } from '../../constants/actionsType'
             this.totalPages = payload.totalPages
             this.activePage = payload.activePage
             this.textSearch = payload.textSearch
+            console.log(payload)
             this.error = false
             this.messageError = null
         },

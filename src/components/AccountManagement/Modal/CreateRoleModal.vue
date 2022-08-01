@@ -67,9 +67,11 @@ export default {
     });
     const handleCancel = () => {
       props.cancel();
+      dialogVisible.value = false;
     };
     const handleCreate = () => {
       createRole(roleForm);
+      dialogVisible.value = false;
       props.cancel();
     };
     watchEffect(() => {

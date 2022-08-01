@@ -12,16 +12,16 @@
     </el-header>
     <el-main class="main">
       <el-row class="width_100">
-        <el-col :span="12">
+        <el-col :span="13">
           <el-table :data="AccountReducer.data" :border="true">
-            <el-table-column label="Email" width="200%" align="center">
+            <el-table-column label="Email" width="" align="center">
               <template #default="scope">
                 <div class="flex_center">
                   <span class="table_span">{{ scope.row.email }}</span>
                 </div>
               </template>
             </el-table-column>
-            <el-table-column label="Role" width="" align="center">
+            <el-table-column label="Role" width="120%" align="center">
               <template #default="scope">
                 <el-popover
                   effect="light"
@@ -47,7 +47,7 @@
                 </el-popover>
               </template>
             </el-table-column>
-            <el-table-column label="Active" width="" align="center">
+            <el-table-column label="Active" width="68%" align="center">
               <template #default="scope">
                 <div class="flex_center">
                   <ActiveAccountCpn :account="scope.row" />
@@ -72,7 +72,7 @@
             </el-table-column>
           </el-table>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="11">
           <Profile
             :accountEmail="accountProps.email"
             :idAccount="accountProps.id"
@@ -156,13 +156,13 @@ export default {
       RoleReducer,
       idProfile,
       Text,
+      accountProps,
+      showUpdateModal,
+      itemUpd,
       handleViewProfile,
       handleSearch,
       handleNextPage,
-      accountProps,
       handleCancelModal,
-      showUpdateModal,
-      itemUpd,
       handleAuthor,
     };
   },

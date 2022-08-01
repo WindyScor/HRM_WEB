@@ -29,7 +29,7 @@ export default function createApi({ url, method }) {
             config.data = payload
         }
 
-        console.log('config', config)
+        // console.log('config', config)
 
         return Axios(config)
             .then(res => res.data)
