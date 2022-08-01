@@ -7,14 +7,12 @@ async function getPermission(payload) {
     const actions = PermissionStore()
     await actions.getPermissionRequest()
     try {
-        console.log(payload, " day la saga cua permission")
         // const res = Permission
         const res = await permissionApi.getPermission(
             null, null, {
             activePage: `${payload.activePage - 1}&`, limit: `${limit}&`, textSearch: `${payload.textSearch}`
         }, token
         )
-        console.log(res, " day la saga cua permission")
         let totalPages = res.totalPage
         if (!totalPages || totalPages == 0) { totalPages = 1 }
         await actions.getPermissionSuccess({
@@ -27,16 +25,14 @@ async function getPermission(payload) {
         await actions.getPermissionFailure(error)
     }
 }
-async function getAllPermission(payload) {
+async function getAllPermission() {
     const actions = PermissionStore()
     await actions.getPermissionRequest()
     try {
-        console.log(payload, " day la saga cua permission")
         // const res = Permission
         const res = await permissionApi.getAllPermission(
             null, null, null, token
         )
-        console.log(res, " day la saga cua permission")
         await actions.getPermissionSuccess({
             data: res.data
         })

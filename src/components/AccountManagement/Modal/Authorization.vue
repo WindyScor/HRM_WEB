@@ -76,6 +76,7 @@ export default {
     const value = ref([]);
     const updForm = reactive({
       id: "",
+      email: "",
       isActive: null,
       role: null,
     });
@@ -104,6 +105,7 @@ export default {
       });
       updForm.id = props.itemUpd.id;
       updForm.isActive = props.itemUpd.isActive;
+      updForm.email = props.itemUpd.email;
       updForm.role = value.value;
     });
     const handleClose = (done) => {

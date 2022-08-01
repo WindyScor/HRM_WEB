@@ -33,15 +33,16 @@
                   :key="index"
                   class="flex_center"
                 >
-                  {{ permission.name }}
+                  {{ permission?.name }}
                 </div>
               </template>
               <template #reference>
-                <el-tag class="cursor_default">{{
-                  scope.row.listPermission[0]
-                    ? scope.row.listPermission[0].name
-                    : "Not Permission"
-                }}</el-tag>
+                <el-tag
+                  v-for="(permission, index) in scope.row.listPermission"
+                  :key="index"
+                  class="cursor_default"
+                  >{{ permission?.name }}</el-tag
+                >
               </template>
             </el-popover>
           </template>

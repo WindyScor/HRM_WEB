@@ -88,12 +88,9 @@ export default {
       dialogVisible.value = false;
     };
     const handleConfirm = () => {
-      updForm.id = props.itemUpd.id;
-      updForm.permissions = value.value.map((item) => {
-        return item;
-      });
       updateRole(updForm);
       dialogVisible.value = false;
+      props.cancel();
     };
     onMounted(() => {
       value.value = props.itemUpd.permissions.map((item) => {
@@ -107,6 +104,7 @@ export default {
       } else {
         dialogVisible.value = false;
       }
+      updForm.id = props.itemUpd.id;
       updForm.name = props.itemUpd.name;
       updForm.permissions = value.value;
       options.value = PermissionReducer.data.map((item) => {

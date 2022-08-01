@@ -24,6 +24,7 @@ const MessageBox = ({ message, path }) => {
                 }, 1000)
             } else {
                 done()
+                return false
             }
         },
     })
